@@ -8,7 +8,7 @@ const port = 3000;
 const db = new pg.Client({
   user: "postgres",
   host: "localhost",
-  database: "globe",
+  database: "Permalist",
   password: "@Caro07033",
   port: 5432,
 });
@@ -24,10 +24,7 @@ let items = [
 
 async function checkItems() {
   const result = await db.query("SELECT * FROM items ORDER BY id ASC;");
-  items =  result.rows.array.forEach((item) => {
-    items.push(item.title)
-  });
-  return items;
+  return result.rows;
 }
 
 app.get("/", async (req, res) => {
@@ -47,7 +44,7 @@ app.post("/add", async (req, res) => {
   const item = req.body.newItem;
   
   try{
-  await db.query( "INSERT INTO items (title) VALUES = $1;",
+  await db.query( "INSERT INTO items (title) VALUES ($1);",
     [item]
   )
   // items.push({ title: item });
